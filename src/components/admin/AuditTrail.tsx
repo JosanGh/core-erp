@@ -72,7 +72,7 @@ export const AuditTrail: React.FC = () => {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'audit_logs' },
-        (payload) => {
+        (payload: any) => {
           if (payload.new.org_id === organization?.id) {
             setLogs((prev) => [payload.new as AuditLogEntry, ...prev]);
           }

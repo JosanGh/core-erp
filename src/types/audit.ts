@@ -1,4 +1,4 @@
-import { UserRole } from '../hooks/useRoleGuard';
+import type { UserRole } from './auth';
 
 export type AuditModule = 'auth' | 'admin' | 'pos' | 'pharmacy' | 'susu' | 'water' | 'inventory';
 

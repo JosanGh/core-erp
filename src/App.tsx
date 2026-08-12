@@ -2,8 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { useState } from 'react';
-import './App.css'
+import './App.css';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 

@@ -10,6 +10,7 @@ export interface Product {
   cost_price: number;
   selling_price: number;
   reorder_level: number;
+  stock_quantity?: number;
   is_batch_tracked: boolean;
   metadata?: Record<string, any>;
   created_at?: string;

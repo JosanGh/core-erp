@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import type { SusuAccount } from '../../types/susu';
-import { Wallet, Search, CheckCircle, ArrowUpRight, Smartphone, RefreshCw } from 'lucide-react';
+import { Search, CheckCircle, ArrowUpRight, Smartphone, RefreshCw } from 'lucide-react';
 
 export const MobileCollectorView: React.FC = () => {
   const { user, organization } = useAuth();

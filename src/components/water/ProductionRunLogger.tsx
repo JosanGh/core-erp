@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import type { Product } from '../../types/inventory';
-import { Droplet, Plus, AlertOctagon, CheckCircle2, Factory } from 'lucide-react';
+import { Droplet, CheckCircle2 } from 'lucide-react';
 
 export const ProductionRunLogger: React.FC = () => {
   const { user, organization } = useAuth();

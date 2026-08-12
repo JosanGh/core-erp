@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Product } from '../../types/inventory';
 import type { InventoryBatch, DrugMetadata } from '../../types/pharmacy';
-import { Pill, AlertTriangle, Clock, ShieldAlert, Plus, Calendar } from 'lucide-react';
+import { Pill, AlertTriangle, Clock, ShieldAlert } from 'lucide-react';
 
 interface BatchWithProduct extends InventoryBatch {
   product?: Product;

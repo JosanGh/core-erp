@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
-import { useRoleGuard, UserRole } from '../../hooks/useRoleGuard';
+import { useRoleGuard } from '../../hooks/useRoleGuard';
+import type { UserRole } from '../../types/auth';
 import {
   Users,
   UserPlus,
@@ -12,7 +13,6 @@ import {
   AlertCircle,
   RefreshCw,
   UserCheck,
-  Building2,
 } from 'lucide-react';
 
 interface Profile {
@@ -25,7 +25,7 @@ interface Profile {
   created_at: string;
 }
 
-const ROLE_BADGES: Record<UserRole, { label: string; color: string }> = {
+const ROLE_BADGES: Partial<Record<UserRole, { label: string; color: string }>> = {
   admin: { label: 'Admin', color: 'bg-purple-950/80 text-purple-300 border-purple-500/30' },
   manager: { label: 'Manager', color: 'bg-blue-950/80 text-blue-300 border-blue-500/30' },
   cashier: { label: 'Cashier', color: 'bg-emerald-950/80 text-emerald-300 border-emerald-500/30' },
@@ -55,9 +55,6 @@ export const UserManagement: React.FC = () => {
   const [password, setPassword] = useState('');
   const [assignedRole, setAssignedRole] = useState<UserRole>('cashier');
   const [submitting, setSubmitting] = useState(false);
-
-  // Password reset form state
-  const [newPassword, setNewPassword] = useState('');
 
   const fetchUsers = async () => {
     if (!organization) return;
@@ -169,7 +166,6 @@ export const UserManagement: React.FC = () => {
       });
       setIsResetOpen(false);
       setSelectedUser(null);
-      setNewPassword('');
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: `Password reset failed: ${err.message}` });
     } finally {

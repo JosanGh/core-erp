@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { IndustryType } from '../types/auth';
-import { Building2, Mail, Lock, User, ShieldCheck } from 'lucide-react';
+import { Building2, Mail, Lock, User } from 'lucide-react';
 
 const INDUSTRIES: { value: IndustryType; label: string }[] = [
   { value: 'supermarket', label: 'Supermarket / Retail POS' },

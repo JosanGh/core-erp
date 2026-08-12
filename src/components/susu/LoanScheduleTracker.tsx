@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { MicrofinanceLoan, LoanScheduleItem } from '../../types/susu';
-import { BadgePercent, Calendar, DollarSign, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export const LoanScheduleTracker: React.FC<{ loanId: string }> = ({ loanId }) => {
   const [loan, setLoan] = useState<MicrofinanceLoan | null>(null);

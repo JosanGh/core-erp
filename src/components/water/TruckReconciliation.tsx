@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { WaterDispatch } from '../../types/water';
-import { Truck, CheckSquare, RefreshCw, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Truck, RefreshCw, ArrowRight } from 'lucide-react';
 
 export const TruckReconciliation: React.FC = () => {
   const [dispatches, setDispatches] = useState<WaterDispatch[]>([]);
