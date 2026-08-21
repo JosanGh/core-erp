@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useRoleGuard } from '../../hooks/useRoleGuard';
 import type { AuditLogEntry, AuditModule } from '../../types/audit';
 import { exportAuditLogsToCSV, exportAuditLogsToPDFReport } from '../../utils/auditExport';
@@ -28,6 +28,9 @@ const MODULE_BADGES: Record<AuditModule, { label: string; color: string }> = {
   susu: { label: 'Susu / Finance', color: 'bg-amber-950/80 text-amber-300 border-amber-500/30' },
   water: { label: 'Water Dist.', color: 'bg-cyan-950/80 text-cyan-300 border-cyan-500/30' },
   inventory: { label: 'Inventory', color: 'bg-blue-950/80 text-blue-300 border-blue-500/30' },
+  school: { label: 'School', color: 'bg-violet-950/80 text-violet-300 border-violet-500/30' },
+  clinic: { label: 'Clinic', color: 'bg-rose-950/80 text-rose-300 border-rose-500/30' },
+  electrical: { label: 'Electrical', color: 'bg-amber-950/80 text-amber-300 border-amber-500/30' },
 };
 
 export const AuditTrail: React.FC = () => {
@@ -41,7 +44,7 @@ export const AuditTrail: React.FC = () => {
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  const fetchAuditLogs = async () => {
+  const fetchAuditLogs = useCallback(async () => {
     if (!organization) return;
     setLoading(true);
 
@@ -62,7 +65,7 @@ export const AuditTrail: React.FC = () => {
       setLogs(data as AuditLogEntry[]);
     }
     setLoading(false);
-  };
+  }, [organization, selectedModule]);
 
   useEffect(() => {
     fetchAuditLogs();
@@ -83,7 +86,7 @@ export const AuditTrail: React.FC = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [organization, selectedModule]);
+  }, [organization, selectedModule, fetchAuditLogs]);
 
   if (!isAuthorized) {
     return (

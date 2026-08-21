@@ -1,6 +1,6 @@
 import type { UserRole } from './auth';
 
-export type AuditModule = 'auth' | 'admin' | 'pos' | 'pharmacy' | 'susu' | 'water' | 'inventory';
+export type AuditModule = 'auth' | 'admin' | 'pos' | 'pharmacy' | 'susu' | 'water' | 'inventory' | 'school' | 'clinic' | 'electrical';
 
 export interface AuditLogEntry {
   id: string;

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { Mail, Lock } from 'lucide-react';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { isStandardPassword, PASSWORD_REQUIREMENTS } from '../utils/authValidation';
 
 export const Login: React.FC = () => {
   const { signIn } = useAuth();
@@ -15,6 +17,10 @@ export const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (!isStandardPassword(password)) {
+      setError(PASSWORD_REQUIREMENTS);
+      return;
+    }
     setSubmitting(true);
 
     const { error: err } = await signIn(email, password);
@@ -28,7 +34,8 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4 font-sans text-slate-100">
+    <div className="auth-page flex min-h-screen items-center justify-center bg-slate-950 p-4 font-sans text-slate-100">
+      <div className="auth-toolbar"><ThemeToggle /></div>
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-white">Sign In</h1>
@@ -91,6 +98,7 @@ export const Login: React.FC = () => {
             Register Here
           </Link>
         </p>
+        <p className="mt-3 text-center text-xs text-slate-500"><Link to="/terms" className="text-blue-400 hover:underline">Terms and privacy</Link></p>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { useRoleGuard } from '../../hooks/useRoleGuard';
 import type { UserRole } from '../../types/auth';
 import {
@@ -56,7 +56,7 @@ export const UserManagement: React.FC = () => {
   const [assignedRole, setAssignedRole] = useState<UserRole>('cashier');
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     if (!organization) return;
     setLoading(true);
     setStatusMessage(null);
@@ -73,11 +73,11 @@ export const UserManagement: React.FC = () => {
       setProfiles(data as Profile[]);
     }
     setLoading(false);
-  };
+  }, [organization]);
 
   useEffect(() => {
     fetchUsers();
-  }, [organization]);
+  }, [fetchUsers]);
 
   // Handle creating a new employee profile and credentials
   const handleCreateUser = async (e: React.FormEvent) => {

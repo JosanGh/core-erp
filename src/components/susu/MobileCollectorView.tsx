@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import type { SusuAccount } from '../../types/susu';
 import { Search, CheckCircle, ArrowUpRight, Smartphone, RefreshCw } from 'lucide-react';
 
@@ -13,7 +13,7 @@ export const MobileCollectorView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const fetchAssignedAccounts = async () => {
+  const fetchAssignedAccounts = useCallback(async () => {
     if (!organization) return;
     setLoading(true);
     const { data } = await supabase
@@ -25,11 +25,11 @@ export const MobileCollectorView: React.FC = () => {
 
     if (data) setAccounts(data as SusuAccount[]);
     setLoading(false);
-  };
+  }, [organization]);
 
   useEffect(() => {
     fetchAssignedAccounts();
-  }, [organization]);
+  }, [fetchAssignedAccounts]);
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault();

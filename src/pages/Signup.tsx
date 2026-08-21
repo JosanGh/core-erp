@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import type { IndustryType } from '../types/auth';
 import { Building2, Mail, Lock, User } from 'lucide-react';
+import { ThemeToggle } from '../components/ThemeToggle';
+import type { SchoolLevel } from '../types/auth';
+import { isStandardPassword, PASSWORD_REQUIREMENTS } from '../utils/authValidation';
 
 const INDUSTRIES: { value: IndustryType; label: string }[] = [
   { value: 'supermarket', label: 'Supermarket / Retail POS' },
@@ -24,6 +27,7 @@ export const Signup: React.FC = () => {
     password: '',
     orgName: '',
     industryType: 'supermarket' as IndustryType,
+    schoolLevel: 'primary' as SchoolLevel,
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -34,16 +38,26 @@ export const Signup: React.FC = () => {
     setError(null);
     setSubmitting(true);
 
-    const { error: err } = await signUp({
+    if (!isStandardPassword(form.password)) {
+      setError(PASSWORD_REQUIREMENTS);
+      setSubmitting(false);
+      return;
+    }
+
+    const result = await signUp({
       email: form.email,
       password: form.password,
       fullName: form.fullName,
       orgName: form.orgName,
       industryType: form.industryType,
+      schoolLevel: form.industryType === 'school' ? form.schoolLevel : undefined,
     });
 
-    if (err) {
-      setError(err.message);
+    if (result.error) {
+      setError(result.error.message);
+      setSubmitting(false);
+    } else if (result.needsConfirmation) {
+      setError('Your account was created. Check your email to confirm it before signing in.');
       setSubmitting(false);
     } else {
       navigate('/dashboard');
@@ -51,7 +65,8 @@ export const Signup: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4 font-sans text-slate-100">
+    <div className="auth-page flex min-h-screen items-center justify-center bg-slate-950 p-4 font-sans text-slate-100">
+      <div className="auth-toolbar"><ThemeToggle /></div>
       <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-white">Create Enterprise Account</h1>
@@ -81,6 +96,22 @@ export const Signup: React.FC = () => {
               />
             </div>
           </div>
+
+          {form.industryType === 'school' && (
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">School level</label>
+              <select
+                value={form.schoolLevel}
+                onChange={(e) => setForm({ ...form, schoolLevel: e.target.value as SchoolLevel })}
+                className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+              >
+                <option value="primary">Primary only (Basic 1 - Basic 6)</option>
+                <option value="junior_high">Junior high only (JHS 1 - JHS 3)</option>
+                <option value="senior_high">Senior high only (SHS 1 - SHS 3)</option>
+                <option value="primary_to_junior_high">Primary to junior high (Basic 1 - JHS 3)</option>
+              </select>
+            </div>
+          )}
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
@@ -142,13 +173,14 @@ export const Signup: React.FC = () => {
               <input
                 type="password"
                 required
-                minLength={6}
+                minLength={8}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder="••••••••"
                 className="w-full rounded-lg border border-slate-800 bg-slate-950 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none"
               />
             </div>
+            <p className="mt-1 text-[10px] text-slate-500">{PASSWORD_REQUIREMENTS}</p>
           </div>
 
           <button
@@ -166,6 +198,7 @@ export const Signup: React.FC = () => {
             Sign In
           </Link>
         </p>
+        <p className="mt-3 text-center text-xs text-slate-500"><Link to="/terms" className="text-blue-400 hover:underline">Read terms and privacy</Link></p>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { usePosStore } from '../../store/usePosStore';
 import { ProductModal } from './ProductModal';
 import type { PaymentMethod } from '../../types/inventory';

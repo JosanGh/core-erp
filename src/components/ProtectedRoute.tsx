@@ -1,7 +1,8 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import type { UserRole, IndustryType } from '../types/auth';
+import Checkout from './SubscriptionCheckout';
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -12,7 +13,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles,
   allowedIndustries,
 }) => {
-  const { user, profile, organization, loading } = useAuth();
+  const { user, profile, organization, loading, accessState, tenantMembershipValid } = useAuth();
 
   if (loading) {
     return (
@@ -27,6 +28,32 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (!user || !profile) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!tenantMembershipValid || !organization || profile.org_id !== organization.id) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-900 p-6 text-white">
+        <div className="max-w-md text-center">
+          <h2 className="text-xl font-bold text-red-400">Workspace access blocked</h2>
+          <p className="mt-2 text-sm text-slate-400">Your account is not an active member of a registered business workspace.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (accessState === 'expired' || accessState === 'suspended') {
+    const isWorkspaceAdmin = profile.role === 'owner' || profile.role === 'admin';
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-900 p-6 text-white">
+        <div className="max-w-md text-center">
+          <h2 className="text-xl font-bold text-amber-400">{isWorkspaceAdmin ? 'Workspace subscription required' : 'Workspace access paused'}</h2>
+          <p className="mt-2 text-sm text-slate-400">
+            {isWorkspaceAdmin ? `This workspace trial has ended. Complete a subscription payment to continue using ${organization?.name}.` : `The ${organization?.name} subscription has ended. Ask your workspace owner or admin to renew it.`}
+          </p>
+          {isWorkspaceAdmin && <div className="mt-6"><Checkout userEmail={user.email} userId={user.id} /></div>}
+        </div>
+      </div>
+    );
   }
 
   if (allowedRoles && !allowedRoles.includes(profile.role)) {

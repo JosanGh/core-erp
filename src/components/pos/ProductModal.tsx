@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { usePosStore } from '../../store/usePosStore';
 import { X, Plus, Package } from 'lucide-react';
 

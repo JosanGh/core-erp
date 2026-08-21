@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import type { Product } from '../../types/inventory';
 import { Droplet, CheckCircle2 } from 'lucide-react';
 

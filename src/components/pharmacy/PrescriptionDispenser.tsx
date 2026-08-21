@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { FileText, X } from 'lucide-react';
 
 export const PrescriptionDispenser: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
